@@ -1,0 +1,102 @@
+{
+  "status": "FULL_COMPUTATION_AND_TECHNICAL_EXPORT_AUTHORIZED",
+  "model": "Q2-R",
+  "full_horizon_run_authorized": true,
+  "technical_export_authorized_after_acceptance": true,
+  "stop_s": 10800,
+  "source_initial_state": {
+    "T_C": 28.0,
+    "C_kg_kg": 2.55,
+    "R_m": 0.02
+  },
+  "physical_configuration": "config/q2.json",
+  "frozen_dependencies": {
+    "src/q2_model.py": "a4af3ca28470b48a06eb246c506b7670693dddaecabebc2361a9c56553a83ecd",
+    "src/q1_model.py": "c8db5b3f9e7587d6f6f7850618127c6490c878ced9fabdc8adbc902c4593ccfe",
+    "config/q2.json": "c55cd4a1151975c88cad5be3b40bded71f3cf40e72c43c6567061236787c7a53"
+  },
+  "inputs": {
+    "statement": {
+      "path": "A题/A题.pdf",
+      "sha256": "052d8014bff5727c019b72e44fdffaf5c145ce04050dd938baaf3527db331736"
+    },
+    "environment": {
+      "path": "A题/附件/附件1.xlsx",
+      "sheet": "Sheet1",
+      "sha256": "7ef32870abeef420b89560b2530ff60dfe4255917805151d89988d0311af9dd7"
+    },
+    "template": {
+      "path": "A题/附件/附件3/result2.xlsx",
+      "sha256": "23b261b295c1b787d000eebbca6521c37075107b6fcf78724f8d395ce1798ff4"
+    }
+  },
+  "primary_start": {
+    "cells": 8192,
+    "method": "Radau",
+    "internal_flux": "fick",
+    "rtol": 1e-11,
+    "atol_T_C": 1e-12,
+    "atol_C_kg_kg": 1e-14,
+    "max_step_s": 0.5,
+    "first_step_factor": 0.01,
+    "root_xtol": 5e-15,
+    "threads": 1
+  },
+  "engineering_targets": {
+    "T_C": 1e-05,
+    "C_kg_kg": 1e-05,
+    "strict_error_bound": false,
+    "four_decimal_unresolved_for_formal_export": 0
+  },
+  "outputs": {
+    "time_s": [
+      1,
+      10800,
+      1
+    ],
+    "radius_cm": [
+      0,
+      2,
+      0.1
+    ],
+    "sheets": [
+      "温度",
+      "水分浓度"
+    ],
+    "results_per_sheet": 226800,
+    "results_total": 453600,
+    "tables": [
+      3,
+      4
+    ],
+    "paper_time_h": [
+      0.5,
+      1,
+      1.5,
+      2,
+      2.5,
+      3
+    ],
+    "paper_radius_cm": [
+      0,
+      0.5,
+      1,
+      1.5,
+      2
+    ],
+    "paper_values_total": 60,
+    "decimal_places": 4,
+    "rule": "nearest four decimals, ties to even, numerical cells; boundary proximity checked separately"
+  },
+  "limits": {
+    "segment_timeout_s": 600,
+    "run_budget_s": 7200,
+    "other_questions": false,
+    "paper_writing": false,
+    "figures": false,
+    "external_submission": false
+  },
+  "seed": null,
+  "seed_reason": "deterministic",
+  "human_review_performed": false
+}

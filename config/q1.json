@@ -1,0 +1,76 @@
+{
+  "schema_version": 1,
+  "model": "R1: semi-analytic radial heat and nonlinear conservative moisture combination",
+  "decision": "Explicitly approved by user on 2026-09-10; stage 1 only is currently executable",
+  "scope": "Q1; fixed representative middle cross-section; no axial/circumferential transport, shrinkage, latent heat or temperature dependence of D",
+  "parameters": {
+    "radius_m": 0.02,
+    "length_m": 0.25,
+    "initial_temperature_C": 28.0,
+    "initial_moisture_kg_kg": 2.55,
+    "density_kg_m3": 820.0,
+    "heat_capacity_J_kgK": 2600.0,
+    "conductivity_W_mK": 0.36,
+    "heat_transfer_W_m2K": 25.0,
+    "moisture_transfer_m_s": 8e-7,
+    "diffusivity_prefactor_m2_s": 7e-9,
+    "diffusivity_exponent_kg_kg": 0.89
+  },
+  "parameter_sources": {
+    "geometry_and_initial_conditions": "题目问题1",
+    "density_heat_capacity_conductivity_exchange_and_diffusivity": "题目附录2",
+    "moisture_definition": "问题1干基含水率 kg/kg; local C enters the empirical D formula directly",
+    "boundary_mapping": "APPROVED MODEL ASSUMPTION: room water column used numerically as effective Ce; not a verified material equilibrium relationship"
+  },
+  "inputs": {
+    "statement": "A题/A题.pdf",
+    "environment": "A题/附件/附件1.xlsx",
+    "environment_sheet": "Sheet1",
+    "environment_columns": {"time_s": 1, "temperature_C": 2, "effective_Ce_kg_kg": 3},
+    "environment_sha256": "7ef32870abeef420b89560b2530ff60dfe4255917805151d89988d0311af9dd7",
+    "result_template": "A题/附件/附件3/result1.xlsx",
+    "template_sha256": "23b261b295c1b787d000eebbca6521c37075107b6fcf78724f8d395ce1798ff4",
+    "interpolation": "piecewise linear on original 60 s nodes; no extrapolation or smoothing"
+  },
+  "numerics": {
+    "moisture_unknown": "radial ring volume averages; independent surface point unknown",
+    "geometry": "V=pi*L*(r_outer^2-r_inner^2), A=2*pi*L*r; internal transmissibility=A/delta_r",
+    "surface_distance": "R minus arithmetic radial midpoint of outer ring",
+    "time_method": "backward Euler step doubling; accept two half steps, no extrapolation",
+    "initial_dt_s": 0.1,
+    "maximum_dt_s": 1.0,
+    "minimum_dt_s": 1e-10,
+    "atol_C": 1e-9,
+    "rtol_C": 1e-7,
+    "nonlinear_residual_tolerance_C": 2e-13,
+    "surface_root_xtol_C": 5e-15,
+    "stage1_cells": [64, 128, 256],
+    "stage1_modes": [16, 32, 64, 128],
+    "case_timeout_s": 300.0,
+    "workers": 1,
+    "random_seed": null,
+    "seed_note": "All current algorithms are deterministic; no random draws"
+  },
+  "stage1": {
+    "stop_time_s": 121.0,
+    "extra_query_times_s": [0.01, 0.1, 59.9, 60.1, 119.9, 120.1],
+    "output_folder": "records/q1-stage1-20260910",
+    "formal_export_authorized": false
+  },
+  "future_output_contract": {
+    "authority_times_s": "0 through 1800 inclusive",
+    "radius_m": "0 through 0.020 in increments of 0.001",
+    "xlsx_times_s": "1 through 1800 inclusive, as indicated by original template",
+    "xlsx_radius_cm": "0 through 2.0 in increments of 0.1",
+    "xlsx_sheets": ["温度", "水分浓度"],
+    "xlsx_A1": "时间\\到药材中心的距离",
+    "xlsx_numeric_region": "B2:V1801",
+    "display_decimal_places": 4
+  },
+  "engineering_targets_not_yet_achieved": {
+    "temperature_change_C": 1e-5,
+    "moisture_change_kg_kg": 1e-5,
+    "normalized_moisture_balance": 1e-8,
+    "interpretation": "Empirical numerical acceptance targets, not mathematical error bounds or physical accuracy claims"
+  }
+}

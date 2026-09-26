@@ -1,0 +1,292 @@
+% Editable Q2 chapter. Numerical macros and tables are generated from accepted data.
+\section{问题2：变物性热质传递模型与前三小时响应}
+\label{sec:q2}
+\input{generated/q2-numbers.tex}
+
+\subsection{模型递进与有效闭合}
+
+问题2要求用附录3的经验关系统一描述烘干过程，并给出前三小时指定位置的温度和水分浓度。相对问题1，变化不仅在于计算时段延长：密度、比热容和导热系数随含水率变化，扩散系数同时受含水率和温度影响。因此，问题1中可以分别求解的两场，在本问通过局部物性形成反馈，常物性温度模态也不再适用于实际变物性计算。本问从题定原始初态重新求解，全程采用附录3，不以问题1末态作为初态，也不另设经验公式切换时刻。
+
+沿用圆柱中部代表截面的一维径向近似，取半径 \(R=0.02\,\mathrm m\)、长度 \(L=0.25\,\mathrm m\)，忽略轴向、周向差异及尺寸变化。固定几何使两问具有一致的空间解释，本问不使用附件2的半径变化数据。记 \(r\) 为距中心的径向距离（m），\(t\) 为时间（s），\(T(r,t)\) 为药材温度（℃），\(C(r,t)\) 为题定干基含水率（kg/kg）。经验式中的绝对温度为
+\begin{equation}
+T_K(r,t)=T(r,t)+273.15 .
+\label{eq:q2-kelvin}
+\end{equation}
+\(C\) 始终按干基数值代入，不换成湿基含水率、百分数或体积浓度。
+
+环境温度 \(T_a(t)\) 与环境水分列均来自附件1。延续问题1的等效边界假设，将烘房水分列的数值作为 \(C_e(t)\)，用于材料表面交换；这一映射不意味着该列是药材含水率观测，也不等同于已经测得材料与空气之间的平衡关系。表面换热系数 \(h_T=25\,\mathrm{W/(m^2\cdot K)}\)、传质系数 \(h_C=8\times10^{-7}\,\mathrm{m/s}\) 沿用附录2，作为本问的继承假设。模型保留有限表面阻力，省略蒸发潜热及迁移水分携带的显式焓通量，其引起的温度偏差尚未由实验量化。
+
+附录3给出的 \(\rho(C)\) 与 \(c_p(C)\) 用于构造有效体积热容 \(W(C)=\rho(C)c_p(C)\)，单位为 \(\mathrm{J/(m^3\cdot K)}\)。采用 \(W(C)T_t\) 描述局部显热响应，是本模型的有效储热闭合；它不等于 \(\partial_t[W(C)T]\)。同时，固定几何下的 \(\rho(C)/(1+C)\) 并非常数，故现有经验关系不足以将其进一步解释为恒定干物质量对应的严格两相质量模型。本问保留 \(C\) 的扩散方程，不增加未经推导的 \(\partial_t(\rho C)\) 储存项，也不把变密度关系解释为收缩规律。
+
+\subsection{变物性方程及初边值条件}
+
+将附录3关系写成局部状态的函数：
+\begin{equation}
+\begin{aligned}
+\rho(C)&=650+128C,
+&c_p(C)&=1450+2736\frac{C}{1+C},\\
+k(C)&=0.21+0.38\frac{C}{1+C},
+&D(C,T_K)&=2.4\times10^{-3}
+  \exp\!\left(-\frac{0.45}{C}\right)
+  \exp\!\left(-\frac{3850}{T_K}\right).
+\end{aligned}
+\label{eq:q2-properties}
+\end{equation}
+其中 \(\rho,c_p,k,D\) 的单位依次为
+\(\mathrm{kg/m^3}\)、\(\mathrm{J/(kg\cdot K)}\)、
+\(\mathrm{W/(m\cdot K)}\)、\(\mathrm{m^2/s}\)；
+经验常数按题定单位使用，使两个指数均无量纲。各位置的物性由当地、当时的 \(C,T_K\) 更新，不以环境值或截面平均值代替。
+
+对同心薄环进行径向热通量和水分通量平衡，在上述有效闭合下得到
+\begin{equation}
+\begin{cases}
+\displaystyle
+W(C)\frac{\partial T}{\partial t}
+=\frac{1}{r}\frac{\partial}{\partial r}
+ \left[r\,k(C)\frac{\partial T}{\partial r}\right],\\[6pt]
+\displaystyle
+\frac{\partial C}{\partial t}
+=\frac{1}{r}\frac{\partial}{\partial r}
+ \left[r\,D(C,T_K)\frac{\partial C}{\partial r}\right],
+\end{cases}
+\qquad 0<r<R,\ t>0 .
+\label{eq:q2-pde}
+\end{equation}
+导热项保留在散度内，因为 \(k(C)\) 随空间变化，将其直接移至径向拉普拉斯算子外会遗漏系数梯度的影响。温度通过 \(D\) 改变水分扩散，含水率通过 \(W,k,D\) 改变两场响应；这种反馈来自变物性，而非额外加入的相变热源。
+
+初始条件及中心对称条件为
+\begin{equation}
+T(r,0)=28\,^{\circ}\mathrm C,\qquad
+C(r,0)=2.55\,\mathrm{kg/kg},\qquad
+T_r(0,t)=C_r(0,t)=0 .
+\label{eq:q2-initial-centre}
+\end{equation}
+记真实表面状态为 \(T_s(t)=T(R,t)\)、\(C_s(t)=C(R,t)\)，取径向向外为正，表面交换满足
+\begin{equation}
+\begin{cases}
+-k(C_s)T_r(R,t)=h_T[T_s-T_a(t)],\\
+-D(C_s,T_s+273.15)C_r(R,t)=h_C[C_s-C_e(t)].
+\end{cases}
+\label{eq:q2-robin}
+\end{equation}
+因此 \(T_s,C_s\) 均由内部传输与外部交换共同确定，不能直接赋为 \(T_a,C_e\)。初始环境温度与药材温度相同，但初始环境水分不等于 \(C(r,0)\)。计算保留均匀初值，仅在 \(t>0\) 施加水分交换边界，并通过短时精化检查这一不相容角点产生的边界层。
+
+附件1包含 \(0\sim14400\,\mathrm s\) 的241个真实采样节点，相邻节点间隔为 \(60\,\mathrm s\)。沿用问题1的分段线性输入，本次 \(0\sim10800\,\mathrm s\) 计算使用覆盖该范围的181个节点，无需外推、平滑或拟合。题目未规定明确的阶段切换阈值，故不根据输出曲线人为改变方程或交换参数。
+
+\subsection{守恒空间离散与耦合时间推进}
+
+\paragraph{环带平均量与内部通量。}
+将半径均匀划分为 \(N\) 个环带，\(\Delta r=R/N\)，第 \(i\) 个环带对应
+\([i\Delta r,(i+1)\Delta r]\)，\(i=0,\ldots,N-1\)。其代表位置、体积和半径为 \(r_f\) 的面面积分别为
+\begin{equation}
+\widehat r_i=(i+\tfrac12)\Delta r,\qquad
+V_i=\pi L\bigl[(i+1)^2-i^2\bigr]\Delta r^2,\qquad
+A_f=2\pi Lr_f .
+\label{eq:q2-geometry}
+\end{equation}
+数值未知量为环带体积平均值 \(\bar T_i,\bar C_i\)，不是代表位置的精确点值。以环带平均状态计算
+\(W_i=W(\bar C_i)\)、\(k_i=k(\bar C_i)\)、
+\(D_i=D(\bar C_i,\bar T_i+273.15)\)；
+这一步的局部物性近似随空间离散一同接受加密检验。
+
+令正数的调和平均为 \(\mathcal H(x,y)=2xy/(x+y)\)。对相邻等距环带，用同一面通量连接两侧，内部传热和直接Fick传质通量取
+\begin{equation}
+\begin{aligned}
+F^T_{i+1/2}
+&=\frac{A_{i+1/2}}{\Delta r}\,
+ \mathcal H(k_i,k_{i+1})(\bar T_i-\bar T_{i+1}),\\
+F^C_{i+1/2}
+&=\frac{A_{i+1/2}}{\Delta r}\,
+ \mathcal H(D_i,D_{i+1})(\bar C_i-\bar C_{i+1}).
+\end{aligned}
+\label{eq:q2-interior-flux}
+\end{equation}
+调和平均对应相邻半环串联传输阻力的近似。\(F^T\) 的单位为 W，
+\(F^C\) 的单位为 \(\mathrm{m^3/s}\cdot(\mathrm{kg/kg})\)，后者不是实际水的质量流率。有限体积方程为
+\begin{equation}
+V_iW_i\frac{\mathrm d\bar T_i}{\mathrm dt}
+=F^T_{i-1/2}-F^T_{i+1/2},\qquad
+V_i\frac{\mathrm d\bar C_i}{\mathrm dt}
+=F^C_{i-1/2}-F^C_{i+1/2}.
+\label{eq:q2-fv}
+\end{equation}
+内部面通量在相邻单元中符号相反；中心面的面积为零，不直接计算 \(1/r\)。特别地，即使温度不均匀，只要 \(C\) 空间均匀，式\eqref{eq:q2-interior-flux}的内部水分通量便为零，符合当前Fick模型未引入热扩散通量的设定。
+
+\paragraph{分离势与独立表面状态。}
+扩散系数可分离为
+\begin{equation}
+\begin{gathered}
+D(C,T_K)=D_*f_T(T_K)f_C(C),\qquad D_*=2.4\times10^{-3}\,\mathrm{m^2/s},\\
+f_T(T_K)=\exp(-3850/T_K),\quad f_C(C)=\exp(-0.45/C),\quad
+\Psi(C)=\int_0^C f_C(s)\,\mathrm ds,\\
+D(C,T_K)C_r=D_*f_T(T_K)\frac{\partial\Psi(C)}{\partial r}.
+\end{gathered}
+\label{eq:q2-separated-potential}
+\end{equation}
+最后一式仅对含水率积分，温度因子留在径向导数外。若对不同温度端点直接相减完整的二元势
+\(D_*f_T(T_K)\Psi(C)\)，会额外产生与 \(T_r\) 有关的通量，因而不符合式\eqref{eq:q2-pde}。本实现的内部面采用式\eqref{eq:q2-interior-flux}，分离势仅用于处理表面半环的非线性含水率变化。
+
+令末环编号为 \(\ell=N-1\)，\(\delta=R-\widehat r_\ell=\Delta r/2\)，并定义
+\(K_b=\mathcal H(k(\bar C_\ell),k(C_s))\)、
+\(a_b=\mathcal H(f_T(\bar T_\ell+273.15),f_T(T_s+273.15))\)。
+表面半环与外部交换满足
+\begin{equation}
+\frac{K_b}{\delta}(\bar T_\ell-T_s)=h_T(T_s-T_a),\qquad
+\frac{D_*a_b}{\delta}\bigl[\Psi(\bar C_\ell)-\Psi(C_s)\bigr]
+=h_C(C_s-C_e).
+\label{eq:q2-surface-pair}
+\end{equation}
+由第一式消去温度，
+\begin{equation}
+T_s(C_s)=\frac{K_b\bar T_\ell+\delta h_TT_a}{K_b+\delta h_T},\qquad
+\frac{D_*a_b}{\delta}\bigl[\Psi(C_s)-\Psi(\bar C_\ell)\bigr]
++h_C(C_s-C_e)=0 .
+\label{eq:q2-surface-root}
+\end{equation}
+在 \(\bar C_\ell\) 与 \(C_e\) 之间括根求解 \(C_s\)，再恢复 \(T_s\)。由于 \(K_b,a_b\) 随表面状态变化，求导时保留两者的交叉影响，不沿用问题1的单变量边界导数。计算同时检查局部唯一性条件、原量纲残差和表面隐式导数；相近状态的势差以积分求积避免直接相减的消减误差。式\eqref{eq:q2-surface-pair}仍是半环空间近似，其误差通过网格精化和独立表面实现核验。
+
+\paragraph{点值重构与整体积分。}
+为得到题定半径处的值，中心按偶对称与环带平均关系重构为
+\begin{equation}
+U(0,t)\approx\frac{5\bar U_0(t)-\bar U_1(t)}{4},
+\qquad U\in\{T,C\}.
+\label{eq:q2-centre-output}
+\end{equation}
+内部指定位置通过三个相邻环带的准确 \(r^2\) 平均矩进行局部二次重构，表面则使用独立求得的 \(T_s,C_s\)。这种处理避免将首环、末环平均值直接当作中心、表面点值。
+
+将温度与含水率未知量交错排列，整体求解式\eqref{eq:q2-fv}形成的刚性非线性系统，采用三阶段五阶Radau IIA方法及解析稀疏Jacobian\cite{q1-radau}。Jacobian包含局部物性导数、\(W'(C)\) 项和表面隐式导数，两场在同一隐式系统内求解，不作热质分裂。正式两条原始轨迹分别使用8192和16384环，相对容差均为 \(10^{-11}\)，温度、含水率绝对容差分别为 \(10^{-12}\,^{\circ}\mathrm C\)、\(10^{-14}\,\mathrm{kg/kg}\)，最大时间步为 \(0.5\,\mathrm s\)。这些容差控制局部误差估计，不直接规定最终点值误差。
+
+积分在每个真实 \(60\,\mathrm s\) 输入节点处结束当前分段，再继承完整状态继续推进；整数秒点由Radau的三次稠密输出获得，并以收紧容差、输出端点对照及不同时间积分器检验。每秒输出并不意味着按固定 \(1\,\mathrm s\) 步长求解。
+
+\paragraph{基于实测收敛的空间精化。}
+对相同物理时间和半径的输出，4096、8192、16384环的相邻网格最大差依次为：
+温度 \(\QTwoTCoarseDifference\)、\(\QTwoTFineDifference\,^{\circ}\mathrm C\)，
+含水率 \(\QTwoCCoarseDifference\)、\(\QTwoCFineDifference\,\mathrm{kg/kg}\)。
+最大差均在 \(t\geq1\,\mathrm s\) 的完整检验集合上计算，包含整数秒及内部环境节点前后 \(0.1\,\mathrm s\)。
+由
+\begin{equation}
+p_{\mathrm{obs}}
+=\log_2\frac{\|U_{4096}-U_{8192}\|_\infty}
+                  {\|U_{8192}-U_{16384}\|_\infty}
+\label{eq:q2-observed-order}
+\end{equation}
+得到温度与含水率的范数收敛阶分别为 \(\QTwoTOrder\)、\(\QTwoCOrder\)。
+结合2048环起的四级结果及逐点差异检查，采用主导二阶空间误差的Richardson精化\cite{q2-spatial-convergence}：
+\begin{equation}
+U^\star(t,r)=U_{16384}(t,r)
+  +\frac{U_{16384}(t,r)-U_{8192}(t,r)}{2^2-1},
+\qquad U\in\{T,C\}.
+\label{eq:q2-richardson}
+\end{equation}
+该式统一作用于两场全部输出点，而非只修正个别尾数。范数阶接近2不表示每点的高阶项完全相同；局部重构位置、边界高阶项及时间误差仍可能影响精化。因此不据此宣称全场四阶，也不将相邻精化结果之差除以15作为误差界，剩余差异另用独立空间实现和时间精化检验。
+
+这里区分三类数值：原始环带轨迹用于积分及其收支检查，\(U^\star\) 为经验证的精化点值，论文与Excel则由 \(U^\star\) 一次舍入至四位小数。精化点值不构成新的完整有限体积状态，也不精确继承原离散轨迹的非线性收支恒等式；后续需要延续计算时，应保留并使用原始完整状态，而不能由21个精化输出点重建初态。
+
+\subsection{计算结果与热质响应分析}
+
+按式\eqref{eq:q2-richardson}得到前三小时的精化结果，题定温度和水分浓度分别列于表\ref{tab:q2-temperature}、表\ref{tab:q2-moisture}。表内时间使用h，距离使用cm，数值均保留四位小数；每隔 \(1\,\mathrm s\)、每隔 \(0.1\,\mathrm{cm}\) 的完整结果见 \texttt{result2.xlsx}。两张工作表分别为“温度”“水分浓度”，时间范围为 \(1\sim10800\,\mathrm s\)，初始时刻另保留全精度初值。
+
+\input{generated/q2-table-temperature.tex}
+\input{generated/q2-table-moisture.tex}
+
+在 \(0.5\,\mathrm h\)，中心与表面温度分别为
+\(\QTwoTCentreHalf\,^{\circ}\mathrm C\)、\(\QTwoTSurfaceHalf\,^{\circ}\mathrm C\)，
+显示外部加热经表面传入后，中心响应存在滞后。六个报告时刻的表面—中心温差逐次缩小，由
+\(\QTwoTGapHalf\,^{\circ}\mathrm C\) 降至 \(3\,\mathrm h\) 时的
+\(\QTwoTGapEnd\,^{\circ}\mathrm C\)。
+中心在 \(0.5\sim1\,\mathrm h\) 的升温量为
+\(\QTwoCentreGainEarly\,^{\circ}\mathrm C\)，在 \(2.5\sim3\,\mathrm h\) 降为
+\(\QTwoCentreGainLate\,^{\circ}\mathrm C\)，与环境输入逐渐接近平台、径向温差缩小的响应一致。
+但这不是全过程严格单调的结论：例如 \(10500\,\mathrm s\) 时，表面温度
+\(\QTwoTSurfaceReverse\,^{\circ}\mathrm C\) 略高于环境的
+\(\QTwoTaReverse\,^{\circ}\mathrm C\)，式\eqref{eq:q2-robin}允许短暂向外放热。
+保留这种由实际输入波动和热惯性产生的响应，而不强制温度曲线单调。
+
+水分场的均匀化明显滞后于温度场。\(0.5\,\mathrm h\) 时，表面含水率已降至
+\(\QTwoCSurfaceHalf\,\mathrm{kg/kg}\)，中心则为
+\(\QTwoCCentreHalfFine\,\mathrm{kg/kg}\)，仅比初值降低约
+\(\QTwoCCentreHalfDrop\,\mathrm{kg/kg}\)；故表中中心值为
+\(\QTwoCCentreHalf\)，不能解释为中心严格不变。
+到 \(3\,\mathrm h\)，中心与表面分别为
+\(\QTwoCCentreEnd\)、\(\QTwoCSurfaceEnd\,\mathrm{kg/kg}\)，径向差异仍明显。
+这是表面交换持续抽离水分、内部水分依靠有限扩散补给的结果；温度趋近并不意味着含水率同步趋于均匀。
+
+为解释温升促进扩散与失水抑制扩散的共同作用，令
+\(C_0=2.55\)、\(T_{K0}=301.15\,\mathrm K\)、
+\(D_{\mathrm{init}}=D(C_0,T_{K0})=\QTwoDInitial\,\mathrm{m^2/s}\)。
+附录3的经验式给出相对初态的恒等分解
+\begin{equation}
+\ln\frac{D(C,T_K)}{D_{\mathrm{init}}}
+=\underbrace{0.45\left(\frac1{C_0}-\frac1C\right)}_{I_C}
++\underbrace{3850\left(\frac1{T_{K0}}-\frac1{T_K}\right)}_{I_T}.
+\label{eq:q2-log-decomposition}
+\end{equation}
+其中 \(I_C,I_T\) 分别表示含水率、温度因子的对数变化。相对初态，温升时 \(I_T\) 为正，失水时 \(I_C\) 为负，初态二者均为零；两者共同决定当地的 \(D\)。
+在 \(3\,\mathrm h\) 的表面，两个乘法因子
+\(\exp(I_C)=\QTwoSurfaceFactorC\)、\(\exp(I_T)=\QTwoSurfaceFactorT\)，
+因此 \(D/D_{\mathrm{init}}=\QTwoSurfaceRatioD\)；
+中心相应为 \(\QTwoCentreFactorC\)、\(\QTwoCentreFactorT\)，
+\(D/D_{\mathrm{init}}=\QTwoCentreRatioD\)。
+尽管此时中心温度略低，较高含水率使其扩散系数
+\(\QTwoDCentreEnd\,\mathrm{m^2/s}\) 高于表面的
+\(\QTwoDSurfaceEnd\,\mathrm{m^2/s}\)。
+这一分解说明了局部经验系数的变化，不是瞬时失水率的分解；实际水分通量还取决于浓度梯度及表面阻力，不能将两个因子直接换算为总烘干时间的贡献。
+
+\subsection{数值验证与精度解释}
+
+验证同时覆盖公式、离散和输出。退化至问题1常热物性与非线性扩散关系的算例，用于对照问题1已验证的结果；制造解用于检查圆柱几何、中心及非线性边界；“\(C\) 均匀、\(T\) 不均匀”算例的内部水分通量为零。实际变物性问题的精度则重新通过全时段空间与时间精化建立，未继承问题1的误差结论。
+
+独立空间参照采用包含中心和表面节点的控制体离散，直接在表面节点施加交换通量，不复用主算法的半环代数消元或环带点值重构。其自身进行了四级空间比较及时间容差收紧。时间核验使用同一空间离散下的加严BDF与Radau，并将两条网格轨迹的时间变化按式\eqref{eq:q2-richardson}的权重计入精化结果。两个积分器共享科学计算库，因此此项是不同时间算法的对照；空间参照的独立性主要来自不同未知量定义、中心与表面处理及另行实现的通量。
+
+为避免把参照当作精确解，采用两条经验核验路径：一条基于主算法相邻精化层的变化与加权时间变化，另一条基于主解—参照差异及参照自身的空间、时间精化证据。保留加严参照前后的迁移差异，两条路径取较大值，不重复相加；精化变化设置工程余量，并保留浮点留量。下列结果针对未舍入的 \(U^\star\)，并非严格误差界或统计置信区间。
+
+\begin{center}
+\small
+\setlength{\tabcolsep}{7pt}
+\renewcommand{\arraystretch}{1.18}
+\begin{tabular}{lcc}
+\toprule
+检验量 & 温度/℃ & 水分浓度/(kg/kg)\\
+\midrule
+独立空间参照的最大差 & \(\QTwoTIndependent\) & \(\QTwoCIndependent\)\\
+整数秒点经验误差包络最大值 & \(\QTwoTIntegerEnvelope\) & \(\QTwoCIntegerEnvelope\)\\
+计入输入折点邻域后的包络最大值 & \(\QTwoTEnvelope\) & \(\QTwoCEnvelope\)\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+独立参照的温度最大差出现在 \(8340.1\,\mathrm s\)、\(r=2\,\mathrm{cm}\)，含水率最大差出现在 \(27\,\mathrm s\)、\(r=1.9\,\mathrm{cm}\)。
+整数秒温度包络的最不利点为 \(9122\,\mathrm s\)、\(r=2\,\mathrm{cm}\)，纳入输入折点邻域后为 \(6540.1\,\mathrm s\)、\(r=2\,\mathrm{cm}\)；
+含水率包络的最不利点均为 \(1\,\mathrm s\)、\(r=2\,\mathrm{cm}\)。
+上述证据支持本问在已检验输出范围内满足温度与含水率分别 \(10^{-5}\,^{\circ}\mathrm C\)、\(10^{-5}\,\mathrm{kg/kg}\) 的工程数值目标，目标并非题目提供的官方误差界。
+
+对于启动阶段，\(0.001\,\mathrm s\) 的网格压力测试仍未达到同一阈值，不据此宣称整个连续时间域一致精确。完整轨迹的加严时间对照同时缩小分段首步，检查了启动误差向 \(t\geq1\,\mathrm s\) 的传播；这一试验反映联合时间设置扰动的影响，而非将其单独解释为纯首步误差。
+
+收支检查作用于原始有限体积轨迹。按同一 \(L=0.25\,\mathrm m\) 几何，
+\begin{equation}
+\frac{\mathrm d}{\mathrm dt}\int_V C\,\mathrm dV
+=-A_Rh_C(C_s-C_e),\qquad A_R=2\pi LR .
+\label{eq:q2-moisture-ledger}
+\end{equation}
+其左端是干基含水率的体积积分变化，不能直接称为千克水的变化。以初始温度为参考，定义有效显热量 \(E_{\mathrm{ref}}\)，并应用链式法则：
+\begin{equation}
+\begin{aligned}
+E_{\mathrm{ref}}&=\int_V W(C)(T-28)\,\mathrm dV,\\
+\frac{\mathrm dE_{\mathrm{ref}}}{\mathrm dt}
+&=A_Rh_T(T_a-T_s)+
+\int_V W'(C)(T-28)C_t\,\mathrm dV .
+\end{aligned}
+\label{eq:q2-heat-ledger}
+\end{equation}
+第二项不可省略，否则会将有效储热系数变化误判为数值能量不平衡。对8192环原始轨迹，180个完整分段末态的独立重算给出水分积分与有效热收支最大残差分别为
+\(\QTwoMoistureLedger\,\mathrm{m^3}\cdot(\mathrm{kg/kg})\)、
+\(\QTwoHeatLedger\,\mathrm J\)；另以Gauss求积核对时间累计通量，结果一致。
+这些量检查离散方程及积分记账的一致性，不证明完整物理总焓守恒，也不代替点值精度检验。
+
+最后，对全部453600个规定输出值，逐项比较全精度结果、经验包络和相邻四位小数舍入分界，并对临界点加严参照。既有证据下四位小数未确认项为0；60个论文表值与正式Excel对应位置逐项一致。四位小数显示另引入至多 \(0.00005\) 的舍入变化，故不能将上表全精度包络直接赋给表3、表4的显示值，也不能把数值舍入稳定写成物理准确度保证。
+
+\subsection{本问结论与适用范围}
+
+前三小时中，表面先响应环境，中心升温与失水较慢；六个报告时刻的温度径向差异逐渐减弱，水分梯度仍然明显。本问将直接Fick内部通量、分离势表面状态、整体隐式求解和经验证的Richardson精化用于题定的变物性问题，贡献在于成熟方法的适配及方程、边界、输出与验证证据的一致衔接。
+
+本次数值结果只覆盖前三小时，尚未模拟背景所述两三天的完整过程。固定中部径向近似、继承的交换系数、等效 \(C_e\) 映射及省略蒸发冷却和携水焓，仍限制物理解释。数值精化不能消除这些模型偏差；更长时段或实际工艺判断仍需相应环境输入、材料—空气平衡关系及温度和水分观测支撑。

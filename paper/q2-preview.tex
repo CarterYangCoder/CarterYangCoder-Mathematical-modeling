@@ -1,0 +1,22 @@
+% Standalone preview shell only; merge sections/q2.tex into the final paper.
+% Keep Q1 fonts, page geometry, bibliography backend and compiler.
+\documentclass[UTF8,a4paper,zihao=-4]{ctexart}
+\usepackage[margin=2.5cm]{geometry}
+\usepackage{amsmath,amssymb,booktabs,graphicx,fancyhdr,fvextra}
+\usepackage[backend=biber,style=numeric,sorting=none]{biblatex}
+\addbibresource{references.bib}
+\addbibresource{q2-references.bib}
+\usepackage[hidelinks]{hyperref}
+\pagestyle{fancy}\fancyhf{}\fancyfoot[C]{\thepage}
+\renewcommand{\headrulewidth}{0pt}
+\setlength{\headheight}{14pt}
+% Preview-only float policy: keep the two required tables near their discussion.
+\renewcommand{\topfraction}{0.85}
+\renewcommand{\floatpagefraction}{0.85}
+\renewcommand{\textfraction}{0.10}
+\begin{document}
+\setcounter{section}{1}
+\setcounter{table}{2}
+\input{sections/q2.tex}
+\printbibliography[title={参考文献}]
+\end{document}

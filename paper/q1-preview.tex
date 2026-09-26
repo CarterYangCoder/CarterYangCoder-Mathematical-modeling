@@ -1,0 +1,15 @@
+% Standalone preview shell only; not part of the insertable chapter.
+% Same ctex, geometry, mathematics, table, bibliography and font setup as main.tex.
+\documentclass[UTF8,a4paper,zihao=-4]{ctexart}
+\usepackage[margin=2.5cm]{geometry}
+\usepackage{amsmath,amssymb,booktabs,graphicx,fancyhdr,fvextra}
+\usepackage[backend=biber,style=numeric,sorting=none]{biblatex}
+\addbibresource{references.bib}
+\usepackage[hidelinks]{hyperref}
+\pagestyle{fancy}\fancyhf{}\fancyfoot[C]{\thepage}
+\renewcommand{\headrulewidth}{0pt}
+\setlength{\headheight}{14pt}
+\begin{document}
+\input{sections/q1.tex}
+\printbibliography[title={参考文献}]
+\end{document}

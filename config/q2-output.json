@@ -1,0 +1,21 @@
+{
+  "question": "Q2",
+  "status": "APPROVED_OUTPUT_SCOPE_WITH_CONSISTENT_PROJECT_ROUNDING",
+  "time_s": {"start": 1, "stop": 10800, "step": 1},
+  "radius_cm": {"start": 0, "stop": 2, "step": 0.1},
+  "sheets": ["温度", "水分浓度"],
+  "total_values": 453600,
+  "table_times_h": [0.5, 1, 1.5, 2, 2.5, 3],
+  "table_radii_cm": [0, 0.5, 1, 1.5, 2],
+  "table_values": 60,
+  "rounding": {
+    "decimal_places": 4,
+    "mode": "ROUND_HALF_UP",
+    "input": "exact binary64 value via Decimal.from_float, rounded once at export",
+    "provenance": "reuse the verified Q1 export convention",
+    "supersedes": "config/q2-full.json outputs.rule initially described ties-to-even; that non-numerical planning wording is superseded here without altering the bound running configuration or computed arrays",
+    "boundary_uncertainty": "independently scan numerical error against half-unit boundaries; rounding itself is not an accuracy proof"
+  },
+  "paper_writing": false,
+  "figures": false
+}

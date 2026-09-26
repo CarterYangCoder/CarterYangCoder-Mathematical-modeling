@@ -1,0 +1,58 @@
+{
+  "status": "USER_APPROVED_MODEL_FOR_SHORT_VALIDATION",
+  "model": "Q2-R",
+  "short_trials_authorized": true,
+  "full_horizon_run_authorized": false,
+  "formal_result_available": false,
+  "scope": "Model finalization, necessary implementation and 0--121 s validation only",
+  "inputs": {
+    "statement": {"path": "A题/A题.pdf", "sha256": "052d8014bff5727c019b72e44fdffaf5c145ce04050dd938baaf3527db331736"},
+    "environment": {"path": "A题/附件/附件1.xlsx", "sheet": "Sheet1", "sha256": "7ef32870abeef420b89560b2530ff60dfe4255917805151d89988d0311af9dd7"},
+    "template": {"path": "A题/附件/附件3/result2.xlsx", "sha256": "23b261b295c1b787d000eebbca6521c37075107b6fcf78724f8d395ce1798ff4"}
+  },
+  "geometry_and_initial_state": {
+    "source": "问题1给定尺寸和初值；问题2同一药材从原始初态重算",
+    "R_m": 0.02, "L_m": 0.25, "T0_C": 28.0, "C0_kg_kg_dry": 2.55,
+    "assumption": "spatially uniform initial state, fixed middle radial section"
+  },
+  "properties": {
+    "source": "题目附录3",
+    "rho_kg_m3": "650+128*C", "cp_J_kg_K": "1450+2736*C/(1+C)",
+    "k_W_m_K": "0.21+0.38*C/(1+C)",
+    "D_m2_s": "0.0024*exp(-0.45/C)*exp(-3850/T_K)",
+    "T_K": "local T_C+273.15", "C": "local dry-basis kg water/kg dry solid"
+  },
+  "accepted_effective_closure": {
+    "heat_storage": "rho(C)*cp(C)*T_t, not partial_t(rho*cp*T)",
+    "moisture_storage": "C_t, not partial_t(rho*C)",
+    "geometry": "fixed radial representative middle section; no axial/circumferential transport or shrinkage",
+    "hT": {"value": 25.0, "unit": "W/(m2 K)", "source": "附录2；第二问继承的已批准假设"},
+    "hC": {"value": 8e-7, "unit": "m/s", "source": "附录2；第二问继承的已批准假设，不乘除密度"},
+    "Ce": "附件1烘房水分列的题内等效边界映射；非药材内部测量或已验证平衡关系",
+    "environment": "linear between actual 60 s nodes only; no smoothing or extrapolation",
+    "omitted": ["latent cooling", "moisture-carried enthalpy", "radiation", "axial transfer", "shrinkage"],
+    "phase_switch": "none invented; appendix3 throughout from t=0"
+  },
+  "numerics": {
+    "candidates": ["potential moisture internal flux", "direct harmonic-D Fick internal flux"],
+    "shared_surface": "independent Ts,Cs, same coupled half-ring Robin equations",
+    "time": "monolithic sparse Radau; BDF as time comparison",
+    "independent_space": "node control volumes with dynamic surface and direct midpoint Fick flux",
+    "short_interval_s": [0,121], "initial_levels": [256,512,1024],
+    "short_output_change_target_T_C": 1e-5,
+    "short_output_change_target_C_kg_kg": 1e-5,
+    "target_status": "engineering diagnostic targets chosen for four-decimal outputs; no strict bound or Q1 accuracy inherited",
+    "final_cells": null, "final_tolerances": null,
+    "timeout_per_segment_s": 600, "workers": 1,
+    "seed": null, "seed_reason": "deterministic algorithms"
+  },
+  "future_output": {
+    "paper_tables": [3,4], "paper_times_h": [0.5,1,1.5,2,2.5,3],
+    "paper_radii_cm": [0,0.5,1,1.5,2], "decimal_places": 4,
+    "xlsx_sheets": ["温度","水分浓度"], "start_s": 1,
+    "end_s": null, "recommended_end_s": 10800,
+    "endpoint_status": "final output extent not explicitly selected; schematic template has no final time, not needed for current short trial",
+    "interval_s": 1, "radii_cm": {"start": 0,"end": 2,"step": 0.1}
+  },
+  "human_technical_review_performed": false
+}

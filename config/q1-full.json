@@ -1,0 +1,14 @@
+{
+  "authorization": "User explicitly approved full Q1 0-1800 s calculation, verification and export after numerical acceptance on 2026-09-11",
+  "base_configuration": "config/q1.json",
+  "physical_model_changes": [],
+  "output_folder": "records/q1-full-20260911",
+  "primary": {"cells": 8192, "method": "BE_two_accepted_half_steps", "rtol": 1e-11, "atol": 1e-13, "max_step_s": 0.5, "min_step_s": 1e-10, "nonlinear_tol_C": 2e-13, "surface_root_tol_C": 5e-15},
+  "continuation": {"prefix": "records/q1-stage2-short-20260910/BE-N8192-r1e-11-t121", "prefix_solution_sha256": "6e30fe7fb74c32a5ddc99cf48afb848c59c9cd768880c86cb1a967da788b8a25", "state": "all ring means, exact time, surface trace, cumulative exchange; not 21-point reconstruction", "controller_restart": "old prefix did not save next proposal; initial proposal is twice the final accepted half-step; validate sensitivity separately", "segments_s": [121, 300, 600, 900, 1200, 1500, 1800]},
+  "reference": {"uniform_cells": [4096, 8192, 16384], "time_methods": ["BDF", "Radau"], "rtol": 1e-12, "atol": 1e-14, "max_step_s": 0.5, "from_initial_state": true},
+  "queries": {"integer_seconds": "0..1800 inclusive", "radii_m": "0..0.020 in increments 0.001", "additional_seconds": [0.001, 0.01, 0.1, 0.25, 0.5, 2.5], "environment_neighbourhood_s": 0.1},
+  "budget": {"BE_segment_wall_s": 1200, "reference_segment_wall_s": 180, "checkpoint_every_s": 60, "workers": 1, "random_seed": null, "setting_changes_require_recomputation": true},
+  "acceptance": {"T_engineering_C": 1e-5, "C_engineering_kg_kg": 1e-5, "normalized_C_balance": 1e-8, "unresolved_rounding_allowed_for_formal": 0, "strict_error_bound_available": false},
+  "full_period_is_not_preaccepted": true,
+  "export": {"template_copy_only": true, "temperature_sheet": "温度", "moisture_sheet": "水分浓度", "time_s": "1..1800 in column A", "radius_cm": "0..2 by 0.1 in first row", "values_per_sheet": 37800, "decimals": 4, "authority_includes_initial_time": true}
+}
